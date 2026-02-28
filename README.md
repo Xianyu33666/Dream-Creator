@@ -1,24 +1,18 @@
-<!-- Language Selector (Works in browsers with JS enabled) -->
-<!-- For GitHub: use the links below -->
-<p align="right">
-  <strong>Language:</strong>
-  <a href="README.md">English</a> |
-  <a href="README-zh-CN.md">简体中文</a> |
-  <a href="README-zh-TW.md">繁體中文</a>
-</p>
-
-<!-- Local viewer language switcher (works in browsers) -->
-<details id="lang-switcher" style="display: none;">
-  <summary>🌐 Switch Language / 切换语言 / 切換語言</summary>
-  <div style="padding: 10px; margin-top: 10px;">
-    <button onclick="showLang('en')" style="padding: 5px 10px; margin: 2px; cursor: pointer;">English</button>
-    <button onclick="showLang('zh-CN')" style="padding: 5px 10px; margin: 2px; cursor: pointer;">简体中文</button>
-    <button onclick="showLang('zh-TW')" style="padding: 5px 10px; margin: 2px; cursor: pointer;">繁體中文</button>
-  </div>
+<!-- Language Switcher using details/summary (GitHub supported) -->
+<details open>
+  <summary><strong>🌐 Language / 语言 / 語言</strong></summary>
+  <p>
+    <a href="#english">English</a> ·
+    <a href="#简体中文">简体中文</a> ·
+    <a href="#繁体中文">繁體中文</a>
+  </p>
 </details>
 
-<!-- English Content (Default) -->
-<div id="content-en">
+---
+
+<!-- English (Default) -->
+<details open id="english">
+  <summary><strong>English</strong></summary>
 
 # Dream Creator
 
@@ -27,8 +21,8 @@
     <img src="https://img.shields.io/badge/Claude%20Code-Skill-4B58C7?style=flat&logo=anthropic" alt="Claude Code Skill">
   </a>
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
-  <img src="https://img.shields.io/github/stars/yourusername/dream-creator" alt="Stars">
-  <img src="https://img.shields.io/github/forks/yourusername/dream-creator" alt="Forks">
+  <img src="https://img.shields.io/github/stars/Xianyu33666/Dream-Creator" alt="Stars">
+  <img src="https://img.shields.io/github/forks/Xianyu33666/Dream-Creator" alt="Forks">
 </p>
 
 AI Application Incubator - Claude Code Skill for interactive application creation.
@@ -52,8 +46,8 @@ Dream Creator is a Claude Code Skill that helps users create applications throug
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dream-creator.git
-cd dream-creator
+git clone https://github.com/Xianyu33666/Dream-Creator.git
+cd Dream-Creator
 
 # Run the install script
 # Linux/macOS
@@ -136,12 +130,13 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 ---
 
-Use Dream Creator to turn your ideas into reality!
+*Use Dream Creator to turn your ideas into reality!*
 
-</div>
+</details>
 
 <!-- Chinese Simplified -->
-<div id="content-zh-CN" style="display: none;">
+<details id="简体中文">
+  <summary><strong>简体中文</strong></summary>
 
 # Dream Creator
 
@@ -150,6 +145,8 @@ Use Dream Creator to turn your ideas into reality!
     <img src="https://img.shields.io/badge/Claude%20Code-Skill-4B58C7?style=flat&logo=anthropic" alt="Claude Code Skill">
   </a>
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/github/stars/Xianyu33666/Dream-Creator" alt="Stars">
+  <img src="https://img.shields.io/github/forks/Xianyu33666/Dream-Creator" alt="Forks">
 </p>
 
 AI 应用孵化器 - Claude Code Skill，帮助用户交互式地创建应用。
@@ -173,8 +170,8 @@ Dream Creator 是一个 Claude Code Skill，通过交互式对话帮助用户创
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/dream-creator.git
-cd dream-creator
+git clone https://github.com/Xianyu33666/Dream-Creator.git
+cd Dream-Creator
 
 # 运行安装脚本
 # Linux/macOS
@@ -257,12 +254,13 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 ---
 
-使用 Dream Creator，让你的创意变为现实！
+*使用 Dream Creator，让你的创意变为现实！*
 
-</div>
+</details>
 
 <!-- Chinese Traditional -->
-<div id="content-zh-TW" style="display: none;">
+<details id="繁体中文">
+  <summary><strong>繁體中文</strong></summary>
 
 # Dream Creator
 
@@ -271,6 +269,8 @@ MIT License - see [LICENSE](./LICENSE) for details.
     <img src="https://img.shields.io/badge/Claude%20Code-Skill-4B58C7?style=flat&logo=anthropic" alt="Claude Code Skill">
   </a>
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/github/stars/Xianyu33666/Dream-Creator" alt="Stars">
+  <img src="https://img.shields.io/github/forks/Xianyu33666/Dream-Creator" alt="Forks">
 </p>
 
 AI 應用孵化器 - Claude Code Skill，幫助使用者互動式地建立應用。
@@ -294,8 +294,8 @@ Dream Creator 是一個 Claude Code Skill，透過互動對話幫助使用者建
 
 ```bash
 # 複製儲存庫
-git clone https://github.com/yourusername/dream-creator.git
-cd dream-creator
+git clone https://github.com/Xianyu33666/Dream-Creator.git
+cd Dream-Creator
 
 # 執行安裝腳本
 # Linux/macOS
@@ -378,37 +378,6 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 ---
 
-使用 Dream Creator，讓你的創意變為現實！
+*使用 Dream Creator，讓你的創意變為現實！*
 
-</div>
-
-<!-- Language Switcher Script -->
-<script>
-function showLang(lang) {
-  // Hide all language sections
-  document.getElementById('content-en').style.display = 'none';
-  document.getElementById('content-zh-CN').style.display = 'none';
-  document.getElementById('content-zh-TW').style.display = 'none';
-
-  // Show selected language
-  const selectedLang = document.getElementById('content-' + lang);
-  if (selectedLang) {
-    selectedLang.style.display = 'block';
-  }
-
-  // Save preference
-  localStorage.setItem('dream-creator-lang', lang);
-}
-
-// Initialize language switcher visibility
-document.addEventListener('DOMContentLoaded', function() {
-  // Show language switcher in browser (hide on GitHub)
-  if (window.location.protocol !== 'file:' && !window.location.hostname.includes('github.com')) {
-    document.getElementById('lang-switcher').style.display = 'block';
-  }
-
-  // Load saved language preference
-  const savedLang = localStorage.getItem('dream-creator-lang') || 'en';
-  showLang(savedLang);
-});
-</script>
+</details>
