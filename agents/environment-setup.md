@@ -59,6 +59,12 @@ Detect project type from dependency files:
 | build.gradle | Java Gradle project |
 | composer.json | PHP project |
 | Gemfile | Ruby project |
+| pubspec.yaml | Flutter/Dart project |
+| project.config.json | WeChat Mini Program |
+| app.json | Mini Program |
+| pages.json | Uni-app project |
+| ios/AppDelegate.swift | iOS Native App |
+| android/MainActivity.kt | Android Native App |
 
 ## Dependency Installation
 

@@ -1,0 +1,28 @@
+{
+  "name": "dream-creator",
+  "version": "1.0.0",
+  "description": "AI application incubator skill for Claude Code, Cursor, and OpenCode",
+  "main": "index.js",
+  "bin": {
+    "dream-creator": "./bin/install.js"
+  },
+  "scripts": {
+    "install": "node bin/install.js"
+  },
+  "keywords": [
+    "claude",
+    "skill",
+    "ai",
+    "application",
+    "generator"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/claude-code.git"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

@@ -1,17 +1,33 @@
 # Dream Creator Skill 安装脚本
-# Windows PowerShell
+# Windows PowerShell / PowerShell 7+
 
 $ErrorActionPreference = "Stop"
 
-# 颜色定义
-$Red = "`e[31m"
-$Green = "`e[32m"
-$Yellow = "`e[33m"
-$Reset = "`e[0m"
+# 检测 PowerShell 版本
+$IsWindowsPowerShell = $PSVersionTable.PSVersion.Major -lt 7
 
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "  Dream Creator Skill 安装器" -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
+# 颜色定义
+if ($IsWindowsPowerShell) {
+    # Windows PowerShell: 使用内置颜色
+    $Red = "Red"
+    $Green = "Green"
+    $Yellow = "Yellow"
+    $Cyan = "Cyan"
+    $DarkGray = "DarkGray"
+    $Reset = "White"
+} else {
+    # PowerShell 7+: 使用 ANSI 颜色
+    $Red = "`e[31m"
+    $Green = "`e[32m"
+    $Yellow = "`e[33m"
+    $Cyan = "`e[36m"
+    $DarkGray = "`e[90m"
+    $Reset = "`e[0m"
+}
+
+Write-Host "==========================================" -ForegroundColor $Cyan
+Write-Host "  Dream Creator Skill 安装器" -ForegroundColor $Cyan
+Write-Host "==========================================" -ForegroundColor $Cyan
 Write-Host ""
 
 # 获取脚本所在目录
@@ -30,14 +46,14 @@ function Install-ToTool {
         $TargetPath = Join-Path $SkillDir $SkillName
 
         if (Test-Path $TargetPath) {
-            Write-Host "  $ToolName : 已安装，跳过" -ForegroundColor DarkGray
+            Write-Host "  $ToolName : 已安装，跳过" -ForegroundColor $DarkGray
         } else {
             New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
             Copy-Item -Path $ScriptDir -Destination $SkillDir -Recurse -Force
-            Write-Host "  ✓ $ToolName : 安装成功" -ForegroundColor Green
+            Write-Host "  [+] $ToolName : 安装成功" -ForegroundColor $Green
         }
     } else {
-        Write-Host "  ✗ $ToolName : 未找到安装目录" -ForegroundColor Red
+        Write-Host "  [X] $ToolName : 未找到安装目录" -ForegroundColor $Red
     }
 }
 
@@ -55,9 +71,9 @@ Install-ToTool "Cursor" $CursorDir
 Install-ToTool "OpenCode" $OpenCodeDir
 
 Write-Host ""
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "安装完成!" -ForegroundColor Green
-Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "==========================================" -ForegroundColor $Cyan
+Write-Host "安装完成!" -ForegroundColor $Green
+Write-Host "==========================================" -ForegroundColor $Cyan
 Write-Host ""
 Write-Host "使用方法:"
 Write-Host "  在支持 Skills 的 AI 工具中输入: /dream-creator"
