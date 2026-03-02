@@ -72,16 +72,11 @@ function ensureDir(dir) {
   }
 }
 
-// 根目录需要复制的文件和目录
+// 根目录需要复制的文件和目录（仅 Skill 所需内容）
 const ROOT_INCLUDE_ITEMS = [
-  'SKILL.md',
-  'agents',
-  'references',
-  'README.md',
-  'README.zh-CN.md',
-  'README.zh-TW.md',
-  'README.install.md',
-  'LICENSE'
+  'SKILL.md',      // 核心技能定义（必需）
+  'agents',        // 代理定义目录
+  'references'     // 参考资料目录
 ];
 
 // 排除的文件和目录
