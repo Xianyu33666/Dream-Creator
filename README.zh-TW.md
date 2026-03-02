@@ -2,8 +2,6 @@
 
 ---
 
-<p align="center">
-
 # Dream Creator
 
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-4B58C7?style=flat&logo=anthropic)](https://claude.com/claude-code)
@@ -12,8 +10,6 @@
 [![Forks](https://img.shields.io/github/forks/Xianyu33666/Dream-Creator?style=flat)](https://github.com/Xianyu33666/Dream-Creator/network/members)
 [![GitHub Release](https://img.shields.io/github/v/release/Xianyu33666/Dream-Creator)](https://github.com/Xianyu33666/Dream-Creator/releases)
 [![Gitee Star](https://gitee.com/holmes33/Dream-Creator/badge/star.svg?theme=dark)](https://gitee.com/holmes33/Dream-Creator)
-
-</p>
 
 ---
 

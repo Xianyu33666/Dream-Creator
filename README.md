@@ -1,17 +1,10 @@
 <!--
-  🏷️ Tags / Keywords (for SEO)
-  ai-assistant, ai-coding, claude-code, claude-code-skill, multi-agent-system,
-  virtual-team, development-team, ai-development, automated-coding,
-  project-generator, app-generator, low-code, productivity-tool,
-  ai-product-manager, ai-developer, ai-architect, devops-automation,
-  cursor-tool, opencode-tool, chatbot-gpt, llm-app, gpt-application
+Tags: ai-assistant, ai-coding, claude-code, multi-agent-system, virtual-team, development-team, ai-development
 -->
 
 **Language:** English | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
 ---
-
-<p align="center">
 
 # Dream Creator
 
@@ -21,8 +14,6 @@
 [![Forks](https://img.shields.io/github/forks/Xianyu33666/Dream-Creator?style=flat)](https://github.com/Xianyu33666/Dream-Creator/network/members)
 [![GitHub Release](https://img.shields.io/github/v/release/Xianyu33666/Dream-Creator)](https://github.com/Xianyu33666/Dream-Creator/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/Xianyu33666/Dream-Creator)](https://github.com/Xianyu33666/Dream-Creator/commits/main)
-
-</p>
 
 ---
 

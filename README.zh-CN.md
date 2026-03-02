@@ -1,17 +1,10 @@
 <!--
-  🏷️ 项目标签 / 关键词 (用于 SEO 搜索优化)
-  ai助手, ai编程, claude-code, claude-code-skill, 多代理系统,
-  虚拟团队, 开发团队, ai开发, 自动化编程,
-  项目生成器, 应用生成器, 低代码, 效率工具,
-  ai产品经理, ai开发者, ai架构师, devops自动化,
-  cursor工具, opencode工具, chatgpt应用, llm应用, gpt应用
+Tags: ai助手, ai编程, claude-code, 多代理系统, 虚拟团队, 开发团队
 -->
 
 **Language:** [English](README.md) | 简体中文 | [繁體中文](README.zh-TW.md)
 
 ---
-
-<p align="center">
 
 # Dream Creator
 
@@ -21,8 +14,6 @@
 [![Forks](https://img.shields.io/github/forks/Xianyu33666/Dream-Creator?style=flat)](https://github.com/Xianyu33666/Dream-Creator/network/members)
 [![GitHub Release](https://img.shields.io/github/v/release/Xianyu33666/Dream-Creator)](https://github.com/Xianyu33666/Dream-Creator/releases)
 [![Gitee Star](https://gitee.com/holmes33/Dream-Creator/badge/star.svg?theme=dark)](https://gitee.com/holmes33/Dream-Creator)
-
-</p>
 
 ---
 
