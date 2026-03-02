@@ -17,3 +17,6 @@ Thumbs.db
 
 # Temporary
 *.tmp
+
+# nul
+nul
