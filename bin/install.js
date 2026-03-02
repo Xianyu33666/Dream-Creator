@@ -72,44 +72,48 @@ function ensureDir(dir) {
   }
 }
 
+// 根目录需要复制的文件和目录
+const ROOT_INCLUDE_ITEMS = [
+  'SKILL.md',
+  'agents',
+  'references',
+  'README.md',
+  'README.zh-CN.md',
+  'README.zh-TW.md',
+  'README.install.md',
+  'LICENSE'
+];
+
+// 排除的文件和目录
+const EXCLUDE_ITEMS = [
+  '.git',
+  '.github',
+  'node_modules',
+  'bin',
+  'install.ps1',
+  'install.sh',
+  'package.json',
+  '.gitignore',
+  '.claude',
+  '.vscode'
+];
+
 // 复制目录
-function copyDir(src, dest) {
+// rootLevel: 是否只在根级别应用 includeItems 过滤
+function copyDir(src, dest, rootLevel = true) {
   ensureDir(dest);
-
-  // 需要复制的文件和目录
-  const includeItems = [
-    'SKILL.md',
-    'agents',
-    'references',
-    'README.md',
-    'README-zh-CN.md',
-    'README-zh-TW.md',
-    'README.install.md',
-    'LICENSE'
-  ];
-
-  // 排除的文件和目录
-  const excludeItems = [
-    '.git',
-    '.github',
-    'node_modules',
-    'bin',
-    'install.ps1',
-    'install.sh',
-    'package.json',
-    '.gitignore'
-  ];
 
   const entries = fs.readdirSync(src, { withFileTypes: true });
 
   for (const entry of entries) {
     // 跳过排除的项目
-    if (excludeItems.includes(entry.name)) {
+    if (EXCLUDE_ITEMS.includes(entry.name)) {
       continue;
     }
 
-    // 只复制包含的项目
-    if (!includeItems.includes(entry.name)) {
+    // 只在根级别应用 includeItems 过滤
+    // 子目录内容全部复制
+    if (rootLevel && !ROOT_INCLUDE_ITEMS.includes(entry.name)) {
       continue;
     }
 
@@ -117,15 +121,23 @@ function copyDir(src, dest) {
     const destPath = path.join(dest, entry.name);
 
     if (entry.isDirectory()) {
-      copyDir(srcPath, destPath);
+      // 子目录递归复制时，不再应用 includeItems 过滤
+      copyDir(srcPath, destPath, false);
     } else {
       fs.copyFileSync(srcPath, destPath);
     }
   }
 }
 
+// 删除目录
+function removeDir(dir) {
+  if (dirExists(dir)) {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 // 安装到指定工具
-function installToTool(toolName, toolDir) {
+function installToTool(toolName, toolDir, forceUpdate = false) {
   logInfo(`检测到: ${toolName}`);
 
   // 确保目录存在
@@ -134,36 +146,67 @@ function installToTool(toolName, toolDir) {
       ensureDir(toolDir);
     } catch (err) {
       logError(`${toolName}: 无法创建目录 - ${err.message}`);
-      return false;
+      return { success: false, action: 'error' };
     }
   }
 
-  const skillDir = path.join(toolDir, 'dream-creator');
+  // 处理 Claude Code 的特殊情况：toolDir 已经包含 skill 名称
+  const skillDir = toolDir.endsWith('dream-creator') 
+    ? toolDir 
+    : path.join(toolDir, 'dream-creator');
 
   if (dirExists(skillDir)) {
-    logSkip(`${toolName}: 已安装，跳过`);
-    return true;
+    if (forceUpdate) {
+      try {
+        removeDir(skillDir);
+        copyDir(pkgDir, skillDir);
+        logSuccess(`${toolName}: 更新成功`);
+        return { success: true, action: 'updated' };
+      } catch (err) {
+        logError(`${toolName}: 更新失败 - ${err.message}`);
+        return { success: false, action: 'error' };
+      }
+    } else {
+      logSkip(`${toolName}: 已安装，跳过 (使用 -Force 强制更新)`);
+      return { success: true, action: 'skipped' };
+    }
   } else {
     try {
-      copyDir(pkgDir, toolDir);
+      copyDir(pkgDir, skillDir);
       logSuccess(`${toolName}: 安装成功`);
-      return true;
+      return { success: true, action: 'installed' };
     } catch (err) {
       logError(`${toolName}: 安装失败 - ${err.message}`);
-      return false;
+      return { success: false, action: 'error' };
     }
   }
+}
+
+// 解析命令行参数
+function parseArgs() {
+  const args = process.argv.slice(2);
+  return {
+    force: args.includes('-Force') || args.includes('--force') || args.includes('-f'),
+    update: args.includes('-Update') || args.includes('--update') || args.includes('-u')
+  };
 }
 
 // 主安装函数
 function install() {
   const platform = getPlatform();
   const homeDir = getHomeDir();
+  const { force, update } = parseArgs();
+  const forceUpdate = force || update;
 
   log('==========================================', 'cyan');
   log('  Dream Creator Skill 安装器', 'cyan');
   log('==========================================', 'cyan');
   log('');
+
+  if (forceUpdate) {
+    log('🔄 强制更新模式', 'cyan');
+    log('');
+  }
 
   let installed = 0;
   let skipped = 0;
@@ -171,42 +214,36 @@ function install() {
   // 定义安装目录映射
   const tools = [];
 
-  // Claude Code 支持两个目录：
-  // 1. ~/.claude/skills/dream-creator (新建目录)
-  // 2. ~/.claude/plugins/skills/dream-creator (plugins 目录)
-
-  const claudeCodeDirs = [
-    path.join(homeDir, '.claude', 'skills', 'dream-creator'),
-    path.join(homeDir, '.claude', 'plugins', 'skills', 'dream-creator')
-  ];
+  // Claude Code 个人级目录: ~/.claude/skills/
+  const claudeCodeDir = path.join(homeDir, '.claude', 'skills', 'dream-creator');
 
   if (platform === 'win32') {
     // Windows
-    // Claude Code - 两个目录都安装
-    for (const dir of claudeCodeDirs) {
-      tools.push({ name: 'Claude Code', dir: dir });
-    }
+    // 个人级 (Claude Code)
+    tools.push({ name: 'Claude Code', dir: claudeCodeDir });
+    // 用户级 (Cursor)
     tools.push({
       name: 'Cursor',
-      dir: path.join(homeDir, '.cursor', 'plugins', 'skills')
+      dir: path.join(homeDir, '.cursor', 'skills')
     });
+    // 全局配置 (OpenCode - XDG规范)
     tools.push({
       name: 'OpenCode',
-      dir: path.join(homeDir, '.opencode', 'plugins', 'skills')
+      dir: path.join(homeDir, '.config', 'opencode', 'skills')
     });
   } else {
     // macOS / Linux
-    // Claude Code - 两个目录都安装
-    for (const dir of claudeCodeDirs) {
-      tools.push({ name: 'Claude Code', dir: dir });
-    }
+    // 个人级 (Claude Code)
+    tools.push({ name: 'Claude Code', dir: claudeCodeDir });
+    // 用户级 (Cursor)
     tools.push({
       name: 'Cursor',
-      dir: path.join(homeDir, '.cursor', 'plugins', 'skills')
+      dir: path.join(homeDir, '.cursor', 'skills')
     });
+    // 全局配置 (OpenCode - XDG规范)
     tools.push({
       name: 'OpenCode',
-      dir: path.join(homeDir, '.opencode', 'plugins', 'skills')
+      dir: path.join(homeDir, '.config', 'opencode', 'skills')
     });
     tools.push({
       name: 'VS Code (Claude)',
@@ -218,9 +255,12 @@ function install() {
   log('');
 
   for (const tool of tools) {
-    if (installToTool(tool.name, tool.dir)) {
+    const result = installToTool(tool.name, tool.dir, forceUpdate);
+    if (result.success && result.action === 'installed') {
       installed++;
-    } else {
+    } else if (result.success && result.action === 'updated') {
+      installed++;
+    } else if (result.action === 'skipped') {
       skipped++;
     }
   }

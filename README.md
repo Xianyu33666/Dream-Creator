@@ -123,18 +123,59 @@ Dream Creator consists of **12 specialized agents**, each with distinct responsi
 
 ### Installation
 
+Dream Creator supports multiple installation methods. Choose the one that works best for you:
+
+#### Option 1: npm (Recommended)
+
+Install globally via npm (requires [Node.js](https://nodejs.org/)):
+
+```bash
+# Install globally
+npm install -g dream-creator
+
+# Or use npx without installing
+npx dream-creator
+```
+
+#### Option 2: Clone & Install
+
+Clone the repository and run the install script:
+
 ```bash
 # Clone the repository
 git clone https://github.com/Xianyu33666/Dream-Creator.git
 cd Dream-Creator
 
-# Run the install script
+# Run the install script (requires Node.js)
 # Linux/macOS
 chmod +x install.sh
 ./install.sh
 
-# Windows
+# Windows PowerShell
 .\install.ps1
+```
+
+#### Option 3: Manual Install
+
+Copy the skill files to the appropriate directory for your AI tool:
+
+| Tool | Installation Path |
+|------|-------------------|
+| **Claude Code** (Personal) | `~/.claude/skills/dream-creator/` |
+| **Cursor** (User) | `~/.cursor/skills/dream-creator/` |
+| **OpenCode** (Global) | `~/.config/opencode/skills/dream-creator/` |
+
+### Updating
+
+To update to the latest version:
+
+```bash
+# If installed via npm
+npm update -g dream-creator
+
+# If cloned from repository
+./install.sh -Force      # Linux/macOS
+.\install.ps1 -Force     # Windows
 ```
 
 ### Usage

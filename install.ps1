@@ -1,4 +1,5 @@
-# Dream Creator Skill 安装脚本
+# Dream Creator Skill 安装脚本 (Wrapper)
+# 统一调用 bin/install.js 进行安装
 # Windows PowerShell / PowerShell 7+
 
 $ErrorActionPreference = "Stop"
@@ -13,7 +14,6 @@ if ($IsWindowsPowerShell) {
     $Green = "Green"
     $Yellow = "Yellow"
     $Cyan = "Cyan"
-    $DarkGray = "DarkGray"
     $Reset = "White"
 } else {
     # PowerShell 7+: 使用 ANSI 颜色
@@ -21,101 +21,42 @@ if ($IsWindowsPowerShell) {
     $Green = "`e[32m"
     $Yellow = "`e[33m"
     $Cyan = "`e[36m"
-    $DarkGray = "`e[90m"
     $Reset = "`e[0m"
 }
 
-Write-Host "==========================================" -ForegroundColor $Cyan
-Write-Host "  Dream Creator Skill 安装器" -ForegroundColor $Cyan
-Write-Host "==========================================" -ForegroundColor $Cyan
-Write-Host ""
-
 # 获取脚本所在目录
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$SkillName = "dream-creator"
 
-function Install-ToTool {
-    param (
-        [string]$ToolName,
-        [string]$SkillDir,
-        [switch]$Force
-    )
+# 检查 Node.js 是否安装
+$NodePath = Get-Command node -ErrorAction SilentlyContinue
 
-    Write-Host "检测到: $ToolName" -ForegroundColor $Yellow
-
-    if (Test-Path $SkillDir) {
-        $TargetPath = Join-Path $SkillDir $SkillName
-
-        if (Test-Path $TargetPath) {
-            if ($Force) {
-                # 删除旧目录并重新安装
-                Remove-Item -Path $TargetPath -Recurse -Force -ErrorAction SilentlyContinue
-                New-Item -ItemType Directory -Force -Path $TargetPath | Out-Null
-                # 手动复制需要的文件（排除 nul 和其他不需要的文件）
-                $ExcludeItems = @("bin", "install.ps1", "install.sh", "package.json", ".git", ".gitignore", "nul")
-                Get-ChildItem -Path $ScriptDir -Force | Where-Object { $ExcludeItems -notContains $_.Name } | ForEach-Object {
-                    $Dest = Join-Path $TargetPath $_.Name
-                    if ($_.PSIsContainer) {
-                        Copy-Item -Path $_.FullName -Destination $Dest -Recurse -Force
-                    } else {
-                        Copy-Item -Path $_.FullName -Destination $Dest -Force
-                    }
-                }
-                Write-Host "  [↻] $ToolName : 更新成功" -ForegroundColor $Green
-            } else {
-                Write-Host "  $ToolName : 已安装" -ForegroundColor $DarkGray
-                Write-Host "    如需更新，请使用: .\install.ps1 -Force" -ForegroundColor $DarkGray
-            }
-        } else {
-            New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
-            # 手动复制需要的文件（排除 nul 和其他不需要的文件）
-            $ExcludeItems = @("bin", "install.ps1", "install.sh", "package.json", ".git", ".gitignore", "nul")
-            Get-ChildItem -Path $ScriptDir -Force | Where-Object { $ExcludeItems -notContains $_.Name } | ForEach-Object {
-                $Dest = Join-Path $SkillDir $SkillName $_.Name
-                if ($_.PSIsContainer) {
-                    Copy-Item -Path $_.FullName -Destination $Dest -Recurse -Force
-                } else {
-                    Copy-Item -Path $_.FullName -Destination $Dest -Force
-                }
-            }
-            Write-Host "  [+] $ToolName : 安装成功" -ForegroundColor $Green
-        }
-    } else {
-        Write-Host "  [X] $ToolName : 未找到安装目录" -ForegroundColor $Red
-    }
-}
-
-# 定义安装目录
-$ClaudeCodeDir = "$env:USERPROFILE\.claude\plugins\skills"
-$CursorDir = "$env:USERPROFILE\.cursor\plugins\skills"
-$OpenCodeDir = "$env:USERPROFILE\.opencode\plugins\skills"
-
-# 检查是否有 -Force 参数（用于更新）
-$ForceUpdate = $false
-if ($args -contains "-Force" -or $args -contains "-Update") {
-    $ForceUpdate = $true
-    Write-Host "🔄 强制更新模式" -ForegroundColor Cyan
+if (-not $NodePath) {
     Write-Host ""
+    Write-Host "==========================================" -ForegroundColor $Red
+    Write-Host "  错误: 未找到 Node.js" -ForegroundColor $Red
+    Write-Host "==========================================" -ForegroundColor $Red
+    Write-Host ""
+    Write-Host "Dream Creator 安装需要 Node.js 环境。" -ForegroundColor $Yellow
+    Write-Host ""
+    Write-Host "请选择以下方式之一安装:"
+    Write-Host ""
+    Write-Host "1. 安装 Node.js (推荐):"
+    Write-Host "   • 官网下载: https://nodejs.org/"
+    Write-Host "   • Windows: winget install OpenJS.NodeJS"
+    Write-Host "   • Chocolatey: choco install nodejs"
+    Write-Host ""
+    Write-Host "2. 或使用 npm 直接安装:"
+    Write-Host "   npm install -g dream-creator"
+    Write-Host ""
+    exit 1
 }
 
-Write-Host "正在安装 Dream Creator Skill..."
-Write-Host ""
+# 检查 install.js 是否存在
+$InstallJs = Join-Path $ScriptDir "bin\install.js"
+if (-not (Test-Path $InstallJs)) {
+    Write-Host "错误: 找不到安装脚本 $InstallJs" -ForegroundColor $Red
+    exit 1
+}
 
-# 安装到各个工具
-Install-ToTool "Claude Code" $ClaudeCodeDir -Force:$ForceUpdate
-Install-ToTool "Cursor" $CursorDir -Force:$ForceUpdate
-Install-ToTool "OpenCode" $OpenCodeDir -Force:$ForceUpdate
-
-Write-Host ""
-Write-Host "==========================================" -ForegroundColor $Cyan
-Write-Host "安装完成!" -ForegroundColor $Green
-Write-Host "==========================================" -ForegroundColor $Cyan
-Write-Host ""
-Write-Host "使用方法:"
-Write-Host "  在支持 Skills 的 AI 工具中输入: /dream-creator"
-Write-Host ""
-Write-Host "支持的工具:"
-Write-Host "  - Claude Code"
-Write-Host "  - Cursor"
-Write-Host "  - OpenCode"
-Write-Host ""
+# 传递所有参数给 install.js
+& node "$InstallJs" @args
