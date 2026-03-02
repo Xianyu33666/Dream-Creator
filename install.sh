@@ -20,6 +20,19 @@ echo "  Dream Creator Skill 安装器"
 echo "=========================================="
 echo ""
 
+# 检测是否有 -Force 或 -Update 参数
+FORCE_UPDATE=false
+for arg in "$@"; do
+    if [ "$arg" = "-Force" ] || [ "$arg" = "-Update" ] || [ "$arg" = "-u" ]; then
+        FORCE_UPDATE=true
+    fi
+done
+
+if [ "$FORCE_UPDATE" = true ]; then
+    echo -e "\033[36m🔄 强制更新模式\033[0m"
+    echo ""
+fi
+
 # 检测 AI 工具并安装
 install_to_tool() {
     local tool_name=$1
@@ -30,7 +43,21 @@ install_to_tool() {
     if [ -d "$skill_dir" ]; then
         # 检查 Skill 是否已安装
         if [ -d "$skill_dir/$SKILL_NAME" ]; then
-            echo -e "${YELLOW}  $tool_name: 已安装，跳过${NC}"
+            if [ "$FORCE_UPDATE" = true ]; then
+                # 删除旧目录并重新安装
+                rm -rf "$skill_dir/$SKILL_NAME"
+                mkdir -p "$skill_dir"
+                cp -r "$SCRIPT_DIR" "$skill_dir/"
+                # 排除不需要的文件
+                rm -rf "$skill_dir/$SKILL_NAME/bin"
+                rm -f "$skill_dir/$SKILL_NAME/install.ps1"
+                rm -f "$skill_dir/$SKILL_NAME/install.sh"
+                rm -f "$skill_dir/$SKILL_NAME/package.json"
+                echo -e "${GREEN}  ↻ $tool_name: 更新成功${NC}"
+            else
+                echo -e "${YELLOW}  $tool_name: 已安装${NC}"
+                echo -e "${YELLOW}    如需更新，请使用: ./install.sh -Force${NC}"
+            fi
         else
             # 创建符号链接或复制
             mkdir -p "$skill_dir"

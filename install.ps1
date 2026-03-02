@@ -37,7 +37,8 @@ $SkillName = "dream-creator"
 function Install-ToTool {
     param (
         [string]$ToolName,
-        [string]$SkillDir
+        [string]$SkillDir,
+        [switch]$Force
     )
 
     Write-Host "检测到: $ToolName" -ForegroundColor $Yellow
@@ -46,7 +47,15 @@ function Install-ToTool {
         $TargetPath = Join-Path $SkillDir $SkillName
 
         if (Test-Path $TargetPath) {
-            Write-Host "  $ToolName : 已安装，跳过" -ForegroundColor $DarkGray
+            if ($Force) {
+                # 删除旧目录并重新安装
+                Remove-Item -Path $TargetPath -Recurse -Force
+                Copy-Item -Path $ScriptDir -Destination $SkillDir -Recurse -Force -Exclude @("bin","install.ps1","install.sh","package.json",".git*")
+                Write-Host "  [↻] $ToolName : 更新成功" -ForegroundColor $Green
+            } else {
+                Write-Host "  $ToolName : 已安装" -ForegroundColor $DarkGray
+                Write-Host "    如需更新，请使用: .\install.ps1 -Force" -ForegroundColor $DarkGray
+            }
         } else {
             New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
             Copy-Item -Path $ScriptDir -Destination $SkillDir -Recurse -Force
@@ -62,13 +71,21 @@ $ClaudeCodeDir = "$env:USERPROFILE\.claude\plugins\skills"
 $CursorDir = "$env:USERPROFILE\.cursor\plugins\skills"
 $OpenCodeDir = "$env:USERPROFILE\.opencode\plugins\skills"
 
+# 检查是否有 -Force 参数（用于更新）
+$ForceUpdate = $false
+if ($args -contains "-Force" -or $args -contains "-Update") {
+    $ForceUpdate = $true
+    Write-Host "🔄 强制更新模式" -ForegroundColor Cyan
+    Write-Host ""
+}
+
 Write-Host "正在安装 Dream Creator Skill..."
 Write-Host ""
 
 # 安装到各个工具
-Install-ToTool "Claude Code" $ClaudeCodeDir
-Install-ToTool "Cursor" $CursorDir
-Install-ToTool "OpenCode" $OpenCodeDir
+Install-ToTool "Claude Code" $ClaudeCodeDir -Force:$ForceUpdate
+Install-ToTool "Cursor" $CursorDir -Force:$ForceUpdate
+Install-ToTool "OpenCode" $OpenCodeDir -Force:$ForceUpdate
 
 Write-Host ""
 Write-Host "==========================================" -ForegroundColor $Cyan
