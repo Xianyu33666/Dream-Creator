@@ -1,4 +1,4 @@
-**🌐 語言：**[English](https://github.com/Xianyu33666/Dream-Creator/blob/main/README.md) | [简体中文](https://github.com/Xianyu33666/Dream-Creator/blob/main/README.zh-CN.md) | 繁體中文 · [📖 文件站點](https://xianyu33666.github.io/Dream-Creator/)
+**Language:** [English](README.md) | [简体中文](README.zh-CN.md) | 繁體中文
 
 ---
 
