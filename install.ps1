@@ -49,8 +49,18 @@ function Install-ToTool {
         if (Test-Path $TargetPath) {
             if ($Force) {
                 # 删除旧目录并重新安装
-                Remove-Item -Path $TargetPath -Recurse -Force
-                Copy-Item -Path $ScriptDir -Destination $SkillDir -Recurse -Force -Exclude @("bin","install.ps1","install.sh","package.json",".git*")
+                Remove-Item -Path $TargetPath -Recurse -Force -ErrorAction SilentlyContinue
+                New-Item -ItemType Directory -Force -Path $TargetPath | Out-Null
+                # 手动复制需要的文件（排除 nul 和其他不需要的文件）
+                $ExcludeItems = @("bin", "install.ps1", "install.sh", "package.json", ".git", ".gitignore", "nul")
+                Get-ChildItem -Path $ScriptDir -Force | Where-Object { $ExcludeItems -notContains $_.Name } | ForEach-Object {
+                    $Dest = Join-Path $TargetPath $_.Name
+                    if ($_.PSIsContainer) {
+                        Copy-Item -Path $_.FullName -Destination $Dest -Recurse -Force
+                    } else {
+                        Copy-Item -Path $_.FullName -Destination $Dest -Force
+                    }
+                }
                 Write-Host "  [↻] $ToolName : 更新成功" -ForegroundColor $Green
             } else {
                 Write-Host "  $ToolName : 已安装" -ForegroundColor $DarkGray
@@ -58,7 +68,16 @@ function Install-ToTool {
             }
         } else {
             New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
-            Copy-Item -Path $ScriptDir -Destination $SkillDir -Recurse -Force
+            # 手动复制需要的文件（排除 nul 和其他不需要的文件）
+            $ExcludeItems = @("bin", "install.ps1", "install.sh", "package.json", ".git", ".gitignore", "nul")
+            Get-ChildItem -Path $ScriptDir -Force | Where-Object { $ExcludeItems -notContains $_.Name } | ForEach-Object {
+                $Dest = Join-Path $SkillDir $SkillName $_.Name
+                if ($_.PSIsContainer) {
+                    Copy-Item -Path $_.FullName -Destination $Dest -Recurse -Force
+                } else {
+                    Copy-Item -Path $_.FullName -Destination $Dest -Force
+                }
+            }
             Write-Host "  [+] $ToolName : 安装成功" -ForegroundColor $Green
         }
     } else {
