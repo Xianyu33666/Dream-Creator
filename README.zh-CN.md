@@ -2,7 +2,7 @@
 Tags: ai助手, ai编程, claude-code, 多代理系统, 虚拟团队, 开发团队
 -->
 
-**Language:** [English](README.md) | 简体中文 | [繁體中文](README.zh-TW.md)
+**🌐 语言：**[English](https://github.com/Xianyu33666/Dream-Creator/blob/main/README.md) | 简体中文 | [繁體中文](https://github.com/Xianyu33666/Dream-Creator/blob/main/README.zh-TW.md) · [📖 文档站点](https://xianyu33666.github.io/Dream-Creator/)
 
 ---
 

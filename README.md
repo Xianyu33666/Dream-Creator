@@ -2,7 +2,7 @@
 Tags: ai-assistant, ai-coding, claude-code, multi-agent-system, virtual-team, development-team, ai-development
 -->
 
-**Language:** English | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
+**🌐 Language:** English | [简体中文](https://github.com/Xianyu33666/Dream-Creator/blob/main/README.zh-CN.md) | [繁體中文](https://github.com/Xianyu33666/Dream-Creator/blob/main/README.zh-TW.md) · [📖 文档站点](https://xianyu33666.github.io/Dream-Creator/)
 
 ---
 
