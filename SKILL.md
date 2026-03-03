@@ -307,6 +307,7 @@ Every time the skill is invoked, MUST perform these checks:
    | welcome | welcome-agent |
    | requirement_gathering | product-manager |
    | technical_design | code-architect |
+   | project_naming | product-manager |
    | generation | code-architect |
    | feature_iteration | product-manager |
 
@@ -1060,7 +1061,7 @@ Then call Task tool to invoke Architect Agent to create the documentation using 
   "current_project": {
     "name": "Project Name",
     "path": "/path/to/project",
-    "phase": "welcome | requirement_gathering | technical_design | generation | feature_iteration",
+    "phase": "welcome | requirement_gathering | technical_design | project_naming | generation | feature_iteration",
     "iteration": 1,
     "last_updated": "2026-03-02T10:00:00Z",
     "active_agent": "product-manager"
@@ -1242,6 +1243,14 @@ When you need to call specific agents, use the Task tool with the agent type:
 
 When calling an agent using Task tool, follow this pattern:
 
+#### About Subagent Selection
+
+The Task tool uses `subagent_name: "coder"` as the general-purpose agent handler. The specific agent role and behavior are determined by:
+1. **The agent definition file** loaded in the prompt (e.g., `agents/code-architect.md`)
+2. **The role specification** in the prompt header (e.g., "You are the Architect Agent")
+
+This allows flexible agent specialization while using a consistent subagent interface.
+
 #### Step 1: Notify User BEFORE Calling Task Tool
 
 **⚠️ CRITICAL**: You MUST output the Agent Assignment Notification **BEFORE** calling the Task tool. The notification should be output as normal text, NOT inside the Task tool call.
@@ -1260,7 +1269,7 @@ Then call Task tool:
 {
   "subagent_name": "coder",
   "description": "Brief task description",
-  "prompt": "## Context\n[Full context about the project, current phase, and what needs to be done]\n\n## Task\n[Specific task for this agent]\n\n## Input\n[Relevant files, code snippets, or data]\n\n## Expected Output\n[What should the agent return]\n\n## Constraints\n[Any limitations or requirements]"
+  "prompt": "## Role\nYou are the [Agent Role] Agent. Load your instructions from `agents/[agent-file].md`.\n\n## Context\n[Full context about the project, current phase, and what needs to be done]\n\n## Task\n[Specific task for this agent]\n\n## Input\n[Relevant files, code snippets, or data]\n\n## Expected Output\n[What should the agent return]\n\n## Constraints\n[Any limitations or requirements]"
 }
 ```
 
